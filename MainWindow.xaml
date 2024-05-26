@@ -1,0 +1,78 @@
+﻿<Window x:Class="PersonBindWithConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PersonBindWithConverter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Background="#FFE0BABA">
+
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BToV" />
+
+        <!-- easy to set per control this way but hard to access the instance-->
+        <!-- <local:Person x:Key="testy" x:Name="MyPerson" /> -->
+
+    </Window.Resources>
+
+    <!-- whole window -->
+    <Window.DataContext>
+        <local:Person  x:Name="MyPerson"/>
+    </Window.DataContext>
+
+    <!-- whole window with ctor params -->
+    <!--<Window.DataContext >
+        <ObjectDataProvider x:Name="PersonInstance" ObjectType="local:Person" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <ObjectDataProvider.ConstructorParameters>
+                <sys:String>Dave</sys:String>
+                <sys:String>Smith</sys:String>
+                <sys:Int32>42</sys:Int32>
+            </ObjectDataProvider.ConstructorParameters>
+        </ObjectDataProvider>
+    </Window.DataContext> -->
+
+
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto">
+
+            </ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <WrapPanel Orientation="Vertical">
+            <Label>First Name</Label>
+            <Label>Last Name</Label>
+            <Label>Age</Label>
+        </WrapPanel>
+
+        <WrapPanel  Grid.Column="1" Orientation="Vertical"  >
+
+            <TextBox Text="{Binding Person_Firstname, Mode=TwoWay}" Padding="4">
+
+            </TextBox>
+            <TextBox Text="{Binding Person_Lastname}" Padding="4"></TextBox>
+            <TextBox Text="{Binding Person_Age}" Padding="4"></TextBox>
+            <TextBlock Text="Sweet">
+                <TextBlock.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{Binding Person_Age}" Click="MenuItem_Click" />
+                        <MenuItem Header="{Binding Person_Firstname}" />
+                        <MenuItem Header="{Binding Person_Age }" />
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
+        </WrapPanel>
+
+        <WrapPanel Grid.Column="2" Orientation="Vertical" >
+            <CheckBox Name="myCB" Content="Agree To Terms" IsChecked="False" />
+            <Button Content="Send" Visibility="{Binding ElementName=myCB, Path=IsChecked, Converter={StaticResource BToV}}" Click="Button_Click"/>
+        </WrapPanel>
+
+
+    </Grid>
+</Window>
